@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">sesi6_ramatriagung91@gmail.com</string>
+    <string name="login_text_message">Come on log in first to explore your new world…</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="login_button_text">LOGIN</string>
+    <string name="register_button_text">REGISTER</string>
+    <string name="loading_message">Wait a moment…</string>
+    <string name="loading_sub_message">Take some coffee while waiting</string>
+    <string name="incorrect_email_format_message">Incorrect email format</string>
+    <string name="move_to_register_message">Move to register</string>
+    <string name="retry">Retry</string>
+    <string name="welcome_message">Welcome to Our Journey</string>
+    <string name="login_failed">Login failed</string>
+    <string name="login_successfully">Login successfully</string>
+    <string name="logout">Logout</string>
+    <string name="search">Search</string>
+    <string name="articles">Articles</string>
+    <string name="are_you_sure_to_logout">Are you sure to logout?</string>
+    <string name="cancel">Cancel</string>
+    <string name="title_activity_home_tab">HomeTabActivity</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="headlines">Headlines</string>
+    <string name="bookmarks">Bookmarks</string>
+    <string name="open_web">Open Web</string>
+</resources>
