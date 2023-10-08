@@ -1,5 +1,6 @@
 package com.example.newsapp.utils.extension
 
+import android.util.Log
 import com.example.newsapp.data.model.Article
 import com.example.newsapp.data.source.local.entity.ArticleEntity
 import com.example.newsapp.data.source.local.entity.ArticleWithBookmark
@@ -39,8 +40,10 @@ fun ArticleEntity.toArticle(): Article =
         publishedAt = this.publishedAt,
     )
 
-fun ArticleWithBookmark.toArticle(): Article =
-    Article(
+fun ArticleWithBookmark.toArticle(): Article {
+    val data = this
+    Log.d("TAGTAGTAG", "toArticle: $data")
+    return Article(
         author = this.articleEntity.author,
         title = this.articleEntity.title,
         description = this.articleEntity.description,
@@ -50,6 +53,8 @@ fun ArticleWithBookmark.toArticle(): Article =
         publishedAt = this.articleEntity.publishedAt,
         isBookmark = this.bookmarkEntity != null
     )
+}
+
 
 fun Article.toBookmarkEntity(): BookmarkEntity =
     BookmarkEntity(

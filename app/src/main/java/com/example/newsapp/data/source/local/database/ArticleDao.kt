@@ -20,10 +20,6 @@ interface ArticleDao {
     @Query("SELECT * FROM article")
     fun getAllArticle(): PagingSource<Int, ArticleWithBookmark>
 
-    @Transaction
-    @Query("SELECT * FROM article WHERE title = :title")
-    suspend fun getDetailArticle(title: String): ArticleWithBookmark
-
     @Query("DELETE FROM article")
     suspend fun deleteAll()
 
@@ -37,5 +33,5 @@ interface ArticleDao {
     suspend fun deleteBookmark(title: String)
 
     @Query("SELECT EXISTS(SELECT * FROM article_bookmark WHERE title = :title)")
-    suspend fun isBookmark(title: String): Boolean
+    fun isBookmarked(title: String): LiveData<Boolean>
 }

@@ -47,9 +47,6 @@ class ArticleRepository private constructor(
 
     fun getLogin() = localDataSource.getLogin()
 
-    suspend fun getDetailArticle(title: String) =
-        localDataSource.getDetailArticle(title).toArticle()
-
     suspend fun insertBookmark(article: Article) =
         localDataSource.insertBookmark(article.toBookmarkEntity())
 
@@ -59,6 +56,8 @@ class ArticleRepository private constructor(
         }
 
     suspend fun deleteBookmark(title: String) = localDataSource.deleteBookmark(title)
+
+    fun checkBookmark(title: String) = localDataSource.checkBookmark(title)
 
     companion object {
         @Volatile

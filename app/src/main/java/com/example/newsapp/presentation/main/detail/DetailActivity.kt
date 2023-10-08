@@ -31,25 +31,37 @@ class DetailActivity : AppCompatActivity() {
     private lateinit var viewModel: DetailViewModel
 
     private lateinit var article: Article
+    private var isBookmarked = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val intentData = intent.parcelable<Article>(EXTRA_ARTICLE)!!
+        article = intent.parcelable(EXTRA_ARTICLE)!!
 
         setupViewModel()
         setupAppbar()
-        loadData(intentData)
+        setupView()
+        setupBookmarkState()
     }
 
-    private fun loadData(intentData: Article) {
-        viewModel.article.observe(this) {
-            article = it
-            setupView()
+    private fun setupBookmarkState() {
+        viewModel.isBookmarked.observe(this) {
+            isBookmarked = it
+
+            val bookmarkDrawable =
+                if (isBookmarked) R.drawable.round_bookmark_24
+                else R.drawable.round_bookmark_border_24
+
+            binding.fabBookmark.setImageDrawable(
+                ContextCompat.getDrawable(
+                    this@DetailActivity,
+                    bookmarkDrawable
+                )
+            )
         }
-        viewModel.getDetailArticle(intentData.title)
+        viewModel.checkBookmark(article.title)
     }
 
     private fun setupViewModel() {
@@ -77,17 +89,6 @@ class DetailActivity : AppCompatActivity() {
             tvArticleDesc.text = article.description
             tvArticleContent.text = article.content
 
-            val bookmarkDrawable =
-                if (article.isBookmark) R.drawable.round_bookmark_24
-                else R.drawable.round_bookmark_border_24
-
-            fabBookmark.setImageDrawable(
-                ContextCompat.getDrawable(
-                    this@DetailActivity,
-                    bookmarkDrawable
-                )
-            )
-
             fabBookmark.setOnClickListener {
                 bookmarkProcess()
             }
@@ -95,10 +96,10 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun bookmarkProcess() {
-        if (article.isBookmark) viewModel.deleteBookmark(article.title)
+        if (isBookmarked) viewModel.deleteBookmark(article.title)
         else viewModel.insertBookmark(article)
         val message =
-            if (article.isBookmark) getString(R.string.bookmark_removed) else getString(R.string.bookmark_inserted)
+            if (isBookmarked) getString(R.string.bookmark_removed) else getString(R.string.bookmark_inserted)
         showToast(message)
     }
 

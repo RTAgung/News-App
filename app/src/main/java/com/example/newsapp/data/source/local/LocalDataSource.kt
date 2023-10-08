@@ -39,14 +39,14 @@ class LocalDataSource private constructor(
 
     fun getAllArticles() = articleDao.getAllArticle()
 
-    suspend fun getDetailArticle(title: String) = articleDao.getDetailArticle(title)
-
     suspend fun insertBookmark(bookmarkEntity: BookmarkEntity) =
         articleDao.insertBookmark(bookmarkEntity)
 
     fun getAllBookmark() = articleDao.getAllBookmark()
 
     suspend fun deleteBookmark(title: String) = articleDao.deleteBookmark(title)
+
+    fun checkBookmark(title: String) = articleDao.isBookmarked(title)
 
     suspend fun withTransaction(doTransaction: suspend () -> Unit) {
         database.withTransaction {
