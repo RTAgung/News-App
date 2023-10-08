@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">sesi6_ramatriagung91@gmail.com</string>
+    <string name="app_name">News App</string>
     <string name="login_text_message">Come on log in first to explore your new world…</string>
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
@@ -26,4 +26,7 @@
     <string name="headlines">Headlines</string>
     <string name="bookmarks">Bookmarks</string>
     <string name="open_web">Open Web</string>
+    <string name="password_contain_8char">Password must contain min 8 char</string>
+    <string name="bookmark_removed">Bookmark removed</string>
+    <string name="bookmark_inserted">Bookmark inserted</string>
 </resources>

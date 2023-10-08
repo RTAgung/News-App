@@ -44,7 +44,10 @@ class LoginFragment : Fragment() {
             etPassword.text = Editable.Factory.getInstance().newEditable(dummyUserPassword)
 
             etEmail.doOnTextChanged { text, _, _, _ ->
-                checkEmailValidation(text.toString())
+                binding.btnLogin.isEnabled = isLoginButtonEnabled(text.toString(), null)
+            }
+            etPassword.doOnTextChanged { text, _, _, _ ->
+                binding.btnLogin.isEnabled = isLoginButtonEnabled(null, text.toString())
             }
             btnLogin.setOnClickListener {
                 makeLogin()
@@ -53,8 +56,15 @@ class LoginFragment : Fragment() {
                 moveToRegister()
             }
 
-            checkEmailValidation(etEmail.text.toString())
+            binding.btnLogin.isEnabled =
+                isLoginButtonEnabled(null, null)
         }
+    }
+
+    private fun isLoginButtonEnabled(email: String?, password: String?): Boolean {
+        val emailText = email ?: binding.etEmail.text.toString()
+        val passwordText = password ?: binding.etPassword.text.toString()
+        return checkPasswordValidation(passwordText) && checkEmailValidation(emailText)
     }
 
     private fun initViewModel() {
@@ -105,10 +115,21 @@ class LoginFragment : Fragment() {
         binding.loadingLayout.loading.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
-    private fun checkEmailValidation(text: String) {
+    private fun checkEmailValidation(text: String): Boolean {
         val isEmailValid = android.util.Patterns.EMAIL_ADDRESS.matcher(text).matches()
-        binding.etEmail.error =
+        binding.layoutEmail.isErrorEnabled = !isEmailValid
+        binding.layoutEmail.error =
             if (!isEmailValid) getString(R.string.incorrect_email_format_message) else null
-        binding.btnLogin.isEnabled = isEmailValid
+
+        return isEmailValid
+    }
+
+    private fun checkPasswordValidation(text: String): Boolean {
+        val isPasswordValid = text.length >= 8
+        binding.layoutPassword.isErrorEnabled = !isPasswordValid
+        binding.layoutPassword.error =
+            if (!isPasswordValid) getString(R.string.password_contain_8char) else null
+
+        return isPasswordValid
     }
 }

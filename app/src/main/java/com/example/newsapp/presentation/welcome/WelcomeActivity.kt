@@ -24,16 +24,18 @@ class WelcomeActivity : AppCompatActivity() {
 
         Handler(Looper.getMainLooper()).postDelayed({
             getSession()
-        }, 3000)
+        }, 2000)
     }
 
     private fun getSession() {
-        viewModel.loginData.observe(this) { isLogin ->
-            if (isLogin)
-                startActivity(Intent(this, HomeActivity::class.java))
-            else
-                startActivity(Intent(this, AuthActivity::class.java))
-            finish()
+        viewModel.loginData.observe(this) { loginData ->
+            if (loginData != null) {
+                if (loginData["isLogin"] as Boolean? == true)
+                    startActivity(Intent(this, HomeActivity::class.java))
+                else
+                    startActivity(Intent(this, AuthActivity::class.java))
+                finish()
+            }
         }
         viewModel.getLogin()
     }

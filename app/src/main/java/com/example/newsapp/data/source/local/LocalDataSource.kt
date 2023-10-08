@@ -5,8 +5,12 @@ import com.example.newsapp.data.source.local.database.ArticleDatabase
 import com.example.newsapp.data.source.local.entity.ArticleEntity
 import com.example.newsapp.data.source.local.entity.BookmarkEntity
 import com.example.newsapp.data.source.local.entity.RemoteKeys
+import com.example.newsapp.data.source.local.preferences.ArticlePreferences
 
-class LocalDataSource private constructor(private val database: ArticleDatabase) {
+class LocalDataSource private constructor(
+    private val database: ArticleDatabase,
+    private val articlePreferences: ArticlePreferences
+) {
     private val articleDao by lazy {
         database.articleDao()
     }
@@ -50,13 +54,23 @@ class LocalDataSource private constructor(private val database: ArticleDatabase)
         }
     }
 
+    suspend fun clearLogin() {
+        articlePreferences.clearData()
+    }
+
+    suspend fun saveLogin(email: String) {
+        articlePreferences.saveLogin(email)
+    }
+
+    fun getLogin() = articlePreferences.getLogin()
+
     companion object {
         @Volatile
         private var instance: LocalDataSource? = null
 
-        fun getInstance(database: ArticleDatabase): LocalDataSource {
+        fun getInstance(database: ArticleDatabase, pref: ArticlePreferences): LocalDataSource {
             return instance ?: synchronized(this) {
-                instance ?: LocalDataSource(database).also { instance = it }
+                instance ?: LocalDataSource(database, pref).also { instance = it }
             }
         }
     }

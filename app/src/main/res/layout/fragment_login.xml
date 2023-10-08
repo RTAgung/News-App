@@ -77,6 +77,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/layoutEmail"
+                app:passwordToggleEnabled="true"
                 app:startIconDrawable="@drawable/round_lock_24">
 
                 <com.google.android.material.textfield.TextInputEditText

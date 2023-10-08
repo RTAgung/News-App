@@ -10,7 +10,6 @@ import androidx.paging.map
 import com.example.newsapp.data.model.Article
 import com.example.newsapp.data.source.ArticleRemoteMediator
 import com.example.newsapp.data.source.local.LocalDataSource
-import com.example.newsapp.data.source.preferences.ArticlePreferences
 import com.example.newsapp.data.source.remote.RemoteDataSource
 import com.example.newsapp.utils.extension.toArticle
 import com.example.newsapp.utils.extension.toBookmarkEntity
@@ -19,8 +18,7 @@ import kotlinx.coroutines.flow.map
 
 class ArticleRepository private constructor(
     private val localDataSource: LocalDataSource,
-    private val remoteDataSource: RemoteDataSource,
-    private val articlePreferences: ArticlePreferences
+    private val remoteDataSource: RemoteDataSource
 ) {
     fun getArticles(query: String): Flow<PagingData<Article>> {
         @OptIn(ExperimentalPagingApi::class)
@@ -40,14 +38,14 @@ class ArticleRepository private constructor(
     }
 
     suspend fun clearLogin() {
-        articlePreferences.clearData()
+        localDataSource.clearLogin()
     }
 
     suspend fun saveLogin(email: String) {
-        articlePreferences.saveLogin(email)
+        localDataSource.saveLogin(email)
     }
 
-    suspend fun getLogin() = articlePreferences.getLogin()
+    fun getLogin() = localDataSource.getLogin()
 
     suspend fun getDetailArticle(title: String) =
         localDataSource.getDetailArticle(title).toArticle()
@@ -68,14 +66,12 @@ class ArticleRepository private constructor(
 
         fun getInstance(
             localDataSource: LocalDataSource,
-            remoteDataSource: RemoteDataSource,
-            articlePreferences: ArticlePreferences
+            remoteDataSource: RemoteDataSource
         ): ArticleRepository {
             return instance ?: synchronized(this) {
                 instance ?: ArticleRepository(
                     localDataSource,
-                    remoteDataSource,
-                    articlePreferences
+                    remoteDataSource
                 ).also {
                     instance = it
                 }

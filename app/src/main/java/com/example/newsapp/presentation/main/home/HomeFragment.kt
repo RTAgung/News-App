@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.newsapp.R
 import com.example.newsapp.data.model.Article
 import com.example.newsapp.databinding.FragmentHomeBinding
 import com.example.newsapp.presentation.adapter.ArticleAdapterCallback
@@ -17,6 +18,7 @@ import com.example.newsapp.presentation.adapter.ArticleHeadlineAdapter
 import com.example.newsapp.presentation.adapter.LoadingStateAdapter
 import com.example.newsapp.presentation.adapter.ViewPagerAdapter
 import com.example.newsapp.presentation.main.detail.DetailActivity
+import com.example.newsapp.utils.extension.showToast
 import com.example.newsapp.utils.viewmodelfactory.ViewModelFactory
 
 class HomeFragment : Fragment() {
@@ -72,6 +74,9 @@ class HomeFragment : Fragment() {
     private fun bookmarkProcess(article: Article) {
         if (article.isBookmark) viewModel?.deleteBookmark(article.title)
         else viewModel?.insertBookmark(article)
+        val message =
+            if (article.isBookmark) getString(R.string.bookmark_removed) else getString(R.string.bookmark_inserted)
+        activity?.showToast(message)
     }
 
     private fun setupAdapter() {
@@ -114,6 +119,12 @@ class HomeFragment : Fragment() {
         viewModel?.pagingListArticle?.observe(viewLifecycleOwner) {
             headlineAdapter.submitData(lifecycle, it)
         }
+        headlineAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                super.onItemRangeInserted(positionStart, itemCount)
+                binding.rvHome.scrollToPosition(0)
+            }
+        })
         refreshHeadlineData()
     }
 

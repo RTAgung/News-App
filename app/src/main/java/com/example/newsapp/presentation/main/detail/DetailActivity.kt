@@ -16,6 +16,7 @@ import com.example.newsapp.data.model.Article
 import com.example.newsapp.databinding.ActivityDetailBinding
 import com.example.newsapp.utils.Helper
 import com.example.newsapp.utils.extension.parcelable
+import com.example.newsapp.utils.extension.showToast
 import com.example.newsapp.utils.viewmodelfactory.ViewModelFactory
 
 
@@ -86,6 +87,9 @@ class DetailActivity : AppCompatActivity() {
     private fun bookmarkProcess() {
         if (article.isBookmark) viewModel.deleteBookmark(article.title)
         else viewModel.insertBookmark(article)
+        val message =
+            if (article.isBookmark) getString(R.string.bookmark_removed) else getString(R.string.bookmark_inserted)
+        showToast(message)
     }
 
     private fun setupAppbar() {
