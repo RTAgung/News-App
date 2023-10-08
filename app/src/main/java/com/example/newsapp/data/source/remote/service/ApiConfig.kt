@@ -37,8 +37,8 @@ class ApiConfig {
 
         }
 
-        fun createApiService(): ApiService {
-            return request().create(ApiService::class.java)
+        fun <T> createService(service: Class<T>): T {
+            return request().create(service)
         }
     }
 

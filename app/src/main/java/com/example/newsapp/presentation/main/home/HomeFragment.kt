@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.newsapp.R
 import com.example.newsapp.data.model.Article
 import com.example.newsapp.databinding.FragmentHomeBinding
+import com.example.newsapp.di.AppModule
+import com.example.newsapp.di.DaggerAppComponent
 import com.example.newsapp.presentation.adapter.ArticleAdapterCallback
 import com.example.newsapp.presentation.adapter.ArticleBookmarkAdapter
 import com.example.newsapp.presentation.adapter.ArticleHeadlineAdapter
@@ -19,14 +21,17 @@ import com.example.newsapp.presentation.adapter.LoadingStateAdapter
 import com.example.newsapp.presentation.adapter.ViewPagerAdapter
 import com.example.newsapp.presentation.main.detail.DetailActivity
 import com.example.newsapp.utils.extension.showToast
-import com.example.newsapp.utils.viewmodelfactory.ViewModelFactory
+import javax.inject.Inject
 
 class HomeFragment : Fragment() {
     private var numTab: Int? = null
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private var viewModel: HomeViewModel? = null
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private lateinit var viewModel: HomeViewModel
 
     private lateinit var headlineAdapter: ArticleHeadlineAdapter
     private lateinit var bookmarkAdapter: ArticleBookmarkAdapter
@@ -72,8 +77,8 @@ class HomeFragment : Fragment() {
     }
 
     private fun bookmarkProcess(article: Article) {
-        if (article.isBookmark) viewModel?.deleteBookmark(article.title)
-        else viewModel?.insertBookmark(article)
+        if (article.isBookmark) viewModel.deleteBookmark(article.title)
+        else viewModel.insertBookmark(article)
         val message =
             if (article.isBookmark) getString(R.string.bookmark_removed) else getString(R.string.bookmark_inserted)
         activity?.showToast(message)
@@ -104,7 +109,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun loadBookmarkData() {
-        viewModel?.listArticle?.observe(viewLifecycleOwner) {
+        viewModel.listArticle.observe(viewLifecycleOwner) {
             bookmarkAdapter.submitList(it)
         }
         bookmarkAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
@@ -116,27 +121,24 @@ class HomeFragment : Fragment() {
     }
 
     private fun loadHeadlineData() {
-        viewModel?.pagingListArticle?.observe(viewLifecycleOwner) {
+        viewModel.pagingListArticle.observe(viewLifecycleOwner) {
             headlineAdapter.submitData(lifecycle, it)
         }
-        headlineAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                super.onItemRangeInserted(positionStart, itemCount)
-                binding.rvHome.scrollToPosition(0)
-            }
-        })
         refreshHeadlineData()
     }
 
     fun refreshHeadlineData(query: String = "") {
-        if (viewModel != null)
-            viewModel?.getArticles(query)
+        viewModel.getArticles(query)
     }
 
     private fun setupViewModel() {
+        DaggerAppComponent.builder()
+            .appModule(AppModule(requireContext()))
+            .build().inject(this@HomeFragment)
+
         viewModel = ViewModelProvider(
-            this,
-            ViewModelFactory.getInstance(requireActivity())
+            requireActivity(),
+            viewModelFactory
         )[HomeViewModel::class.java]
     }
 

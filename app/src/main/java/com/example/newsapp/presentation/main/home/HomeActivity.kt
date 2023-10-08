@@ -12,17 +12,23 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.example.newsapp.R
 import com.example.newsapp.databinding.ActivityHomeBinding
+import com.example.newsapp.di.AppModule
+import com.example.newsapp.di.DaggerAppComponent
 import com.example.newsapp.presentation.adapter.ViewPagerAdapter
 import com.example.newsapp.presentation.auth.AuthActivity
-import com.example.newsapp.utils.viewmodelfactory.ViewModelFactory
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
+import javax.inject.Inject
 
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: HomeViewModel
+
     private lateinit var viewPagerAdapter: ViewPagerAdapter
 
     private var myMenu: Menu? = null
@@ -66,9 +72,13 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun setupViewModel() {
+        DaggerAppComponent.builder()
+            .appModule(AppModule(this))
+            .build().inject(this)
+
         viewModel = ViewModelProvider(
             this,
-            ViewModelFactory.getInstance(this)
+            viewModelFactory
         )[HomeViewModel::class.java]
     }
 

@@ -13,13 +13,18 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.newsapp.R
 import com.example.newsapp.databinding.FragmentLoginBinding
+import com.example.newsapp.di.AppModule
+import com.example.newsapp.di.DaggerAppComponent
 import com.example.newsapp.presentation.main.home.HomeActivity
-import com.example.newsapp.utils.viewmodelfactory.ViewModelFactory
 import com.google.android.material.snackbar.Snackbar
+import javax.inject.Inject
 
 class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var viewModel: LoginViewModel
 
@@ -68,9 +73,13 @@ class LoginFragment : Fragment() {
     }
 
     private fun initViewModel() {
+        DaggerAppComponent.builder()
+            .appModule(AppModule(requireContext()))
+            .build().inject(this@LoginFragment)
+
         viewModel = ViewModelProvider(
             requireActivity(),
-            ViewModelFactory.getInstance(requireActivity())
+            viewModelFactory
         )[LoginViewModel::class.java]
     }
 

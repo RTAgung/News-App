@@ -14,16 +14,22 @@ import com.bumptech.glide.Glide
 import com.example.newsapp.R
 import com.example.newsapp.data.model.Article
 import com.example.newsapp.databinding.ActivityDetailBinding
+import com.example.newsapp.di.AppModule
+import com.example.newsapp.di.DaggerAppComponent
 import com.example.newsapp.utils.Helper
 import com.example.newsapp.utils.extension.parcelable
 import com.example.newsapp.utils.extension.showToast
-import com.example.newsapp.utils.viewmodelfactory.ViewModelFactory
+import javax.inject.Inject
 
 
 class DetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailBinding
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: DetailViewModel
+
     private lateinit var article: Article
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,9 +53,13 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun setupViewModel() {
+        DaggerAppComponent.builder()
+            .appModule(AppModule(this))
+            .build().inject(this)
+
         viewModel = ViewModelProvider(
             this,
-            ViewModelFactory.getInstance(this)
+            viewModelFactory
         )[DetailViewModel::class.java]
     }
 

@@ -7,12 +7,18 @@ import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.newsapp.databinding.ActivityWelcomeBinding
+import com.example.newsapp.di.AppModule
+import com.example.newsapp.di.DaggerAppComponent
 import com.example.newsapp.presentation.auth.AuthActivity
 import com.example.newsapp.presentation.main.home.HomeActivity
-import com.example.newsapp.utils.viewmodelfactory.ViewModelFactory
+import javax.inject.Inject
 
 class WelcomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityWelcomeBinding
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
     private lateinit var viewModel: WelcomeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,9 +47,13 @@ class WelcomeActivity : AppCompatActivity() {
     }
 
     private fun initViewModel() {
+        DaggerAppComponent.builder()
+            .appModule(AppModule(this))
+            .build().inject(this)
+
         viewModel = ViewModelProvider(
             this,
-            ViewModelFactory.getInstance(this)
+            viewModelFactory
         )[WelcomeViewModel::class.java]
     }
 }

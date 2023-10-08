@@ -10,8 +10,12 @@ import androidx.paging.PagingData
 import com.example.newsapp.data.model.Article
 import com.example.newsapp.data.repository.ArticleRepository
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeViewModel(private val repository: ArticleRepository) : ViewModel() {
+class HomeViewModel @Inject constructor() : ViewModel() {
+    @Inject
+    lateinit var repository: ArticleRepository
+
     private var _pagingListArticle = MutableLiveData<String>()
     val pagingListArticle: LiveData<PagingData<Article>>
         get() = _pagingListArticle.switchMap { query ->

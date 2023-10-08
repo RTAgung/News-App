@@ -7,8 +7,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.newsapp.data.model.Article
 import com.example.newsapp.data.repository.ArticleRepository
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class DetailViewModel(private val repository: ArticleRepository) : ViewModel() {
+class DetailViewModel @Inject constructor() : ViewModel() {
+    @Inject
+    lateinit var repository: ArticleRepository
+
     private var _article = MutableLiveData<Article>()
     val article: LiveData<Article> = _article
 
