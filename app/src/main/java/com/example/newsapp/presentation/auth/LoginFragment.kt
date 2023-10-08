@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,8 +44,8 @@ class LoginFragment : Fragment() {
         initViewModel()
 
         binding.apply {
-            etEmail.text = Editable.Factory.getInstance().newEditable(dummyUserEmail)
-            etPassword.text = Editable.Factory.getInstance().newEditable(dummyUserPassword)
+//            etEmail.text = Editable.Factory.getInstance().newEditable(dummyUserEmail)
+//            etPassword.text = Editable.Factory.getInstance().newEditable(dummyUserPassword)
 
             etEmail.doOnTextChanged { text, _, _, _ ->
                 binding.btnLogin.isEnabled = isLoginButtonEnabled(text.toString(), null)
@@ -69,7 +68,9 @@ class LoginFragment : Fragment() {
     private fun isLoginButtonEnabled(email: String?, password: String?): Boolean {
         val emailText = email ?: binding.etEmail.text.toString()
         val passwordText = password ?: binding.etPassword.text.toString()
-        return checkPasswordValidation(passwordText) && checkEmailValidation(emailText)
+        val isEmailValid = checkEmailValidation(emailText)
+        val isPasswordValid = checkPasswordValidation(passwordText)
+        return isPasswordValid && isEmailValid
     }
 
     private fun initViewModel() {

@@ -28,7 +28,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
-            app:lottie_rawRes="@raw/anim_welcome" />
+            app:lottie_rawRes="@raw/anim_welcome"
+            tools:src="@tools:sample/avatars" />
 
         <TextView
             android:id="@+id/tv_welcome_message"
